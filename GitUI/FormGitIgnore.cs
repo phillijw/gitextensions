@@ -26,40 +26,7 @@ namespace GitUI
             new TranslationString("Save changes?");
 
         private string _originalGitIgnoreFileContent = string.Empty;
-
-        #region default patterns
-        private static readonly string[] DefaultIgnorePatterns = new[]
-        {
-            "#ignore thumbnails created by windows",
-            "Thumbs.db",
-            "#Ignore files build by Visual Studio",
-            "*.obj",
-            "*.exe",
-            "*.pdb",
-            "*.user",
-            "*.aps",
-            "*.pch",
-            "*.vspscc",
-            "*_i.c",
-            "*_p.c",
-            "*.ncb",
-            "*.suo",
-            "*.tlb",
-            "*.tlh",
-            "*.bak",
-            "*.cache",
-            "*.ilk",
-            "*.log",
-            "[Bb]in",
-            "[Dd]ebug*/",
-            "*.lib",
-            "*.sbr",
-            "obj/",
-            "[Rr]elease*/",
-            "_ReSharper*/",
-            "[Tt]est[Rr]esult*"
-        };
-        #endregion
+		private static readonly string DefaultIgnorePatternsFile = "./DefaultIgnorePatterns.txt";
 
         public FormGitIgnore()
         {
@@ -150,8 +117,10 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
+			var defaultIgnorePatterns = (File.Exists(DefaultIgnorePatternsFile)) ? File.ReadAllLines(DefaultIgnorePatternsFile) : new string[] { };
+			
             var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-            var patternsToAdd = DefaultIgnorePatterns
+            var patternsToAdd = defaultIgnorePatterns
                 .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 .ToArray();
             if (patternsToAdd.Length == 0)
